@@ -13,6 +13,10 @@ nav .navbar-nav a {
   padding: 5px 10px;
 }
 
+.round-input {
+  border-radius: 20px;
+}
+
 .btn-main {
   color: #232323;
   border-radius: 5px;
