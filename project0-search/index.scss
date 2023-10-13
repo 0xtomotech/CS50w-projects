@@ -1,6 +1,4 @@
-$padding: 10px;
-
-form {
+#main_form {
   width: 500px;
 }
 
@@ -31,4 +29,12 @@ nav .navbar-nav a {
 .btn-main:hover {
   border-width: 0.7px;
   border-color: #aeaeae;
+}
+
+.btn-advanced {
+  font-size: small;
+}
+
+.smaller {
+  font-size: x-small;
 }
