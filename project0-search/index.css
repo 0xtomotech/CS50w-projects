@@ -1,0 +1,30 @@
+form {
+  width: 500px;
+}
+
+.logo-img {
+  max-width: 300px;
+  margin: 20px;
+}
+
+nav .navbar-nav a {
+  font-size: small;
+  color: #232323 !important;
+  padding: 5px 10px;
+}
+
+.btn-main {
+  color: #232323;
+  border-radius: 5px;
+  font-size: small;
+  background-color: #eaeaea;
+  border-width: 0;
+  padding: 8px 15px;
+}
+
+.btn-main:hover {
+  border-width: 0.7px;
+  border-color: #aeaeae;
+}
+
+/*# sourceMappingURL=index.css.map */
