@@ -1,0 +1,42 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Edit Page
+{% endblock %}
+
+{% block body %}
+    <h1>Edit Page</h1>
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 grid-item">
+                <h5>Title:</h5>
+            </div>
+            <div class="col-md-10 grid-item">
+                {{ title_form }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 grid-item">
+                <p>Edit content:</p>
+                <p>GitHub's <a href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax">Markdown</a> Language Recommended</p>
+                <button type="submit" class="btn btn-warning">Save Entry</button>
+            </div>
+            <div class="col-md-10 grid-item">
+                <h5>{{ entry_form }}</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 grid-item">
+
+            </div>
+            <div class="col-md-10 grid-item">
+
+            </div>
+        </div>
+
+    </form>
+
+{% endblock %}

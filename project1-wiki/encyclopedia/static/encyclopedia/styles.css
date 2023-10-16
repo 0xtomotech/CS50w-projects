@@ -1,0 +1,75 @@
+body {
+    margin: 0;
+    background-color: white;
+}
+
+code {
+    white-space: pre;
+}
+
+h1 {
+    margin-top: 0px;
+    padding-top: 20px;
+}
+
+textarea {
+    height: 90vh;
+    width: 80%;
+}
+
+.main {
+    padding: 10px;
+}
+
+.search {
+    width: 100%;
+    font-size: 15px;
+    line-height: 15px;
+}
+
+.sidebar {
+    background-color: #ffde9f;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    margin-top: 5px;
+}
+
+.search-input {
+    font-size: 13px;
+    width: 100%;
+}
+
+.search-input::placeholder {
+    font-size: 13px;
+    color: #7dc9fa;
+}
+
+.title-input {
+    font-size: 15px;
+    width: 250px;
+}
+
+.title-input::placeholder {
+    font-size: 15px;
+    color: #7dc9fa;
+}
+
+.entry-input {
+    font-size: 15px;
+    width: 750px;
+    height: 750px;
+}
+
+.title-input::placeholder {
+    font-size: 15px;
+    color: #7dc9fa;
+}
+
+.grid-item {
+    margin-bottom: 15px;
+    text-align: left;
+    vertical-align: top;
+}
