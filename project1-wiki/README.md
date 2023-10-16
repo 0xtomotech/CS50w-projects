@@ -3,6 +3,11 @@
 This Django web application was created as part of Harvard
 's CS50W course and it is a simple encyclopedia, where users can search for, view, edit, and create new content. The content is rendered in Markdown, allowing users to leverage the rich formatting features of Markdown.
 
+[App Demo on Youtube](https://youtu.be/bAQbfF_eGuA)
+
+[Project Instructions](https://cs50.harvard.edu/web/2020/projects/1/wiki/)
+
+
 ## Features
 
 1. **Search Functionality**: Users can search for existing encyclopedia entries.
