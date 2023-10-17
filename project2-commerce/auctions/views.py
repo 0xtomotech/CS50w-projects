@@ -5,14 +5,14 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing, Category
-from .forms import CreateListingForm
+from .models import User, Listing, Category, Bid
+from .forms import CreateListingForm, BidForm
 
 # TODO: listing should also render watched by section
 
 #TODO: default index route to render all active auction listings
 def index(request):
-    #TODO: Fix listing links on index page in html
+
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.filter(sold=False)
     })
@@ -64,11 +64,59 @@ def listing(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     user = request.user
     is_owner = True if listing.creator == user else False
+    bid_form = BidForm()
+    bids = Bid.objects.filter(listing=listing).order_by('-price')
 
     return render(request, "auctions/listing.html", {
         "listing": listing,
-        "is_owner": is_owner
+        "is_owner": is_owner,
+        "bid_form": bid_form,
+        "bids": bids
     })
+
+
+
+def bid_on_listing(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    bids = Bid.objects.filter(listing=listing).order_by('-price')
+    if request.method == "POST":
+        form = BidForm(request.POST)
+        if form.is_valid():
+            bid_amount = form.cleaned_data['bid_amount']
+
+            # Check if bid meets requirements
+            if listing.price < bid_amount:
+                # Accept bid
+                listing.price = bid_amount # update listing price
+                listing.save()
+                Bid.objects.create(listing=listing, bidder=request.user, price=bid_amount)
+                return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "is_owner": (listing.creator == request.user),
+                    "bid_form": form,
+                    "message": "Bid sucessfully placed!",
+                    "bids": bids
+                })
+            else:
+                # render listing page with error message displayed in listing html
+                return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "is_owner": (listing.creator == request.user),
+                    "bid_form": form,
+                    "message": "Your bid should be higher than the current price!",
+                    "bids": bids
+                })
+        else:
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "is_owner": (listing.creator == request.user),
+                "bid_form": form,
+                "message": "Invalid form input. Please try again.",
+                "bids": bids
+            })
+    # Handle GET requests
+    return redirect('listing', listing_id=listing_id)
+
 
 def login_view(request):
     if request.method == "POST":

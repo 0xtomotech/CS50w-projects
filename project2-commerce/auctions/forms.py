@@ -11,3 +11,7 @@ class CreateListingForm(forms.Form):
     categories = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Choose a category",
                                         required=False)
     new_category = forms.CharField(required=False, label="Optional: new category")
+
+
+class BidForm(forms.Form):
+    bid_amount = forms.DecimalField(widget=forms.NumberInput(attrs={'step': '0.01', 'min': '0'}), label="Place Bid")

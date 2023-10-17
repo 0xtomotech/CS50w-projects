@@ -9,6 +9,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("createlisting", views.createlisting, name="createlisting"),
     path("listing/<str:listing_id>", views.listing, name="listing"),
+    path("listing/<int:listing_id>/bid", views.bid_on_listing, name="listing_bid")
 ]
 
 # TODO: create create listing page

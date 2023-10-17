@@ -13,10 +13,37 @@
                 <div class="card-body">
                     <h3 class="card-title">{{ listing.title }}</h3>
                     <p class="card-text"><small class="text-muted">By {{ listing.creator }}</small></p>
+                    <p class="card-text">Category: {{ listing.category }}</p>
                     <p class="card-text">{{ listing.description }}</p>
                     <p class="card-text">Price: ${{ listing.price }}</p>
-                    <p class="card-text">Category: {{ listing.category }}</p>
-                    <!--  can add more details or buttons here as required -->
+
+
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'listing_bid' listing.id %}" method="POST">
+                        {% csrf_token %}
+                        {{ bid_form.as_p }}
+                        <input type="submit" value="Bid on this listing" class="btn btn-warning">
+                    </form>
+                    {% if message %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+
+                    {% else %}
+                    {% endif %}
+
+
+                    <h4>All Bids</h4>
+                    {% if bids %}
+                        <ul>
+                        {% for bid in bids %}
+                            <li>{{ bid.bidder }} placed a bid of ${{ bid.price }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No bids placed yet!</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
