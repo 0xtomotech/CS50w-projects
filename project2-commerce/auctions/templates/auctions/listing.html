@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card mb-5">
+        <div class="row no-gutters">
+            <!-- Image on the left -->
+            <div class="col-md-5">
+                <img src="{{ listing.image_url }}" class="card-img" alt="{{ listing.title }}">
+            </div>
+            <!-- Details on the right -->
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h3 class="card-title">{{ listing.title }}</h3>
+                    <p class="card-text"><small class="text-muted">By {{ listing.creator }}</small></p>
+                    <p class="card-text">{{ listing.description }}</p>
+                    <p class="card-text">Price: ${{ listing.price }}</p>
+                    <p class="card-text">Category: {{ listing.category }}</p>
+                    <!--  can add more details or buttons here as required -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

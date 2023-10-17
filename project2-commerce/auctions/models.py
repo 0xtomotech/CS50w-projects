@@ -18,7 +18,7 @@ class Category(models.Model):
 class Listing(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
-    image_url = models.URLField()
+    image_url = models.URLField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="cat_listings")
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
