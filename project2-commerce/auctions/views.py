@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from .models import User, Listing, Category, Bid, Watchlist, Comment
-from .forms import CreateListingForm, BidForm, CommentForm
+from .forms import CreateListingForm, BidForm, CommentForm, CategoryFilterForm
 
 # TODO: listing should also render watched by section
 
@@ -162,6 +162,22 @@ def watchlist(request, user_id):
         "listings": watchlist.listings.all()
     })
 
+# TODO: Check loging required against each view
+
+def category(request):
+    form = CategoryFilterForm(request.GET or None)
+    listings = Listing.objects.all()
+    # or None part is a fallback. If request.GET is empty, then None will be used as the value
+    if form.is_valid():
+        category = form.cleaned_data['category']
+        if category:
+            listings = Listing.objects.filter(category=category)
+
+
+    return render(request, "auctions/category.html", {
+        "form": form,
+        "listings": listings
+    })
 
 
 def close_auction(request, listing_id):

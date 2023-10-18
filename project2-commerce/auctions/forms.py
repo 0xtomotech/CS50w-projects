@@ -19,3 +19,7 @@ class BidForm(forms.Form):
 
 class CommentForm(forms.Form):
     content = forms.CharField(widget=forms.Textarea(attrs={'rows': '3', 'cols': '50'}), label="")
+
+
+class CategoryFilterForm(forms.Form):
+    category = forms.ModelChoiceField(queryset=Category.objects.all())
