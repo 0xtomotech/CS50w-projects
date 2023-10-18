@@ -11,17 +11,23 @@
             <!-- Details on the right -->
             <div class="col-md-7">
                 <div class="card-body">
-                    <h3 class="card-title">{{ listing.title }}</h3>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">{{ listing.title }}</h3>
+                        {% if user.is_authenticated and listing.active %}
+                            {% if listing in user.watchlist.listings.all %}
+                                <a href="{% url 'toggle_watchlist' listing.id %}" class="btn btn-warning">Remove from Watchlist</a>
+                            {% else %}
+                                <a href="{% url 'toggle_watchlist' listing.id %}" class="btn btn-primary">Add to Watchlist</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
                     <p class="card-text"><small class="text-muted">By {{ listing.creator }}</small></p>
-                    {% if listing.active %}
-                        <p class="card-text">Listing Status: Auction Active</p>
-                    {% else %}
-                        <p class="card-text">Listing Status: Auction Closed - Won By {{ listing.winner }}</p>
-                    {% endif %}
-                    <p class="card-text">Category: {{ listing.category }}</p>
-                    <p class="card-text">{{ listing.description }}</p>
-                    <p class="card-text">Price: ${{ listing.price }}</p>
 
+                    <hr>
+
+                    <p class="card-text">Category: {{ listing.category }}</p>
+                    <p class="card-text font-weight-bold">{{ listing.description }}</p>
+                    <p class="card-text font-weight-bold text-primary">Price: ${{ listing.price }}</p>
 
                     {% if user.is_authenticated and listing.active %}
                     <form action="{% url 'listing_bid' listing.id %}" method="POST">
@@ -30,21 +36,13 @@
                         <input type="submit" value="Bid on this listing" class="btn btn-warning">
                     </form>
                         {% if message %}
-                            <div class="alert alert-danger" role="alert">
+                            <div class="alert alert-info mt-3" role="alert"> <!-- Changed to alert-info for generic color -->
                                 {{ message }}
                             </div>
                         {% endif %}
-                        {% else %}
                     {% endif %}
 
-                    {% if user.is_authenticated and listing.active %}
-                        {% if listing in user.watchlist.listings.all %}
-                            <a href="{% url 'toggle_watchlist' listing.id %}" class="btn btn-warning">Remove from Watchlist</a>
-                        {% else %}
-                            <a href="{% url 'toggle_watchlist' listing.id %}" class="btn btn-primary">Add to Watchlist</a>
-                        {% endif %}
-                    {% endif %}
-
+                    <hr>
 
                     <h4>All Bids</h4>
                     {% if bids %}
@@ -56,6 +54,8 @@
                     {% else %}
                         <p>No bids placed yet!</p>
                     {% endif %}
+
+                    <hr>
 
                     {% if user.is_authenticated and listing.active %}
                     <h4>Comments</h4>

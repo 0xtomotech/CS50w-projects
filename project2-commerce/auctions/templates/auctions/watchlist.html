@@ -1,12 +1,12 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h3>My Watchlist</h3>
+    <h3 class="mb-4">My Watchlist</h3>
     {% if listings %}
-    <div class="container mt-5">
-        <div class="row">
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-start"> <!-- Added justify-content-start to left-align cards -->
             {% for listing in listings %}
-                <div class="col-md-4 mb-4">
+                <div class="col-lg-4 mb-4"> <!-- Changed col-md-4 to col-lg-4 for larger cards on large screens -->
                     <div class="card h-100">
                         <div class="row g-0">
                             <!-- Image on the left -->
@@ -18,10 +18,12 @@
                             <!-- Details on the right -->
                             <div class="col-md-7">
                                 <div class="card-body">
-                                    <a href="{% url 'listing' listing.id %}" class="card-title">{{ listing.title }}</a>
-                                    <p class="card-text">Created by: {{ listing.creator }}</p>
-                                    <p class="card-text">{{ listing.description }}</p>
-                                    <p class="card-text">Price: ${{ listing.price }}</p>
+                                    <a href="{% url 'listing' listing.id %}" class="card-title h5"> <!-- Used h5 class for more emphasis -->
+                                        {{ listing.title }}
+                                    </a>
+                                    <p class="card-text small font-weight-bold">Created by: {{ listing.creator }}</p> <!-- Made small and bold -->
+                                    <p class="card-text font-weight-bold">{{ listing.description }}</p>
+                                    <p class="card-text font-weight-bold text-primary">Price: ${{ listing.price }}</p> <!-- Made bold and used primary color for distinction -->
                                     <p class="card-text">Category: {{ listing.category }}</p>
                                 </div>
                             </div>
@@ -36,5 +38,3 @@
     {% endif %}
 
 {% endblock %}
-
-<!--USE THIS LATER: <a href="{% url 'listing_page' listing.id %}"> -->

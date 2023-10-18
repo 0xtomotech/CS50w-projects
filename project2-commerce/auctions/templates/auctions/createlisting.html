@@ -1,43 +1,43 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h3>Create Listing</h3>
+<div class="container-flex mt-5">
+    <h3 class="mb-4">Create Listing</h3>
 
     <form action="{% url 'createlisting' %}" method="POST">
         {% csrf_token %}
 
-        <h6>Title of listing</h6>
-        {{ listing_form.title }}
+        <div class="form-group">
+            <label for="{{ listing_form.title.id_for_label }}">Title of listing</label><br>
+            {{ listing_form.title }}
+        </div>
 
-        <br><br>
+        <div class="form-group">
+            <label for="{{ listing_form.description.id_for_label }}">Description of listing</label><br>
+            {{ listing_form.description }}
+        </div>
 
-        <h6>Category</h6>
-        {{ listing_form.categories }}
+        <div class="form-group">
+            <label for="{{ listing_form.bid.id_for_label }}">Starting bid</label><br>
+            {{ listing_form.bid }}
+        </div>
 
-        <br><br>
+        <div class="form-group">
+            <label for="{{ listing_form.image_url.id_for_label }}">Image URL</label><br>
+            {{ listing_form.image_url }}
+        </div>
 
-        <h6>Optional: new category</h6>
-        {{ listing_form.new_category }}
+        <div class="form-group">
+            <label for="{{ listing_form.categories.id_for_label }}">Category</label><br>
+            {{ listing_form.categories }}
+        </div>
 
-        <br><br>
-
-        <h6>Description of listing</h6>
-        {{ listing_form.description }}
-
-        <br><br>
-
-        <h6>Image URL</h6>
-        {{ listing_form.image_url }}
-
-        <br><br>
-
-        <h6>Starting bid</h6>
-        {{ listing_form.bid }}
-
-        <br><br>
-
+        <div class="form-group">
+            <label for="{{ listing_form.new_category.id_for_label }}">Optional: new category</label><br>
+            {{ listing_form.new_category }}
+        </div>
 
         <input type="submit" class="btn btn-primary">
     </form>
-
+</div>
 {% endblock %}
