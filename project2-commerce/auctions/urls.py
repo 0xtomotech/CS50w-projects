@@ -9,11 +9,12 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("createlisting", views.createlisting, name="createlisting"),
     path("listing/<str:listing_id>", views.listing, name="listing"),
-    path("listing/<int:listing_id>/bid", views.bid_on_listing, name="listing_bid")
+    path("listing/<int:listing_id>/bid", views.bid_on_listing, name="listing_bid"),
+    path("toggle_watchlist/<str:listing_id>/", views.toggle_watchlist, name='toggle_watchlist'),
+    path("close_auction/<int:listing_id>/", views.close_auction, name='close_auction'),
+    path("watchlist/<int:user_id>/", views.watchlist, name="watchlist")
 ]
 
-# TODO: create create listing page
-# TODO: create individual listing page
 # TODO: create watchlist page for logged in users
 # TODO: create categories page for logged in users
 

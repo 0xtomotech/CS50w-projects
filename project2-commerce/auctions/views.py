@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing, Category, Bid
-from .forms import CreateListingForm, BidForm
+from .models import User, Listing, Category, Bid, Watchlist, Comment
+from .forms import CreateListingForm, BidForm, CommentForm
 
 # TODO: listing should also render watched by section
 
@@ -65,14 +65,32 @@ def listing(request, listing_id):
     user = request.user
     is_owner = True if listing.creator == user else False
     bid_form = BidForm()
+    comment_form = CommentForm()
+    comments = Comment.objects.filter(listing=listing).order_by('-timestamp')
     bids = Bid.objects.filter(listing=listing).order_by('-price')
 
-    return render(request, "auctions/listing.html", {
-        "listing": listing,
-        "is_owner": is_owner,
-        "bid_form": bid_form,
-        "bids": bids
-    })
+    if request.method == "POST":
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = Comment(
+                user=request.user,
+                listing=listing,
+                comment=comment_form.cleaned_data['content']
+            )
+            comment.save()
+            return redirect('listing', listing_id)
+
+
+    else:
+        # Get method
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "is_owner": is_owner,
+            "bid_form": bid_form,
+            "bids": bids,
+            "comment_form": comment_form,
+            "comments": comments
+        })
 
 
 
@@ -117,6 +135,47 @@ def bid_on_listing(request, listing_id):
     # Handle GET requests
     return redirect('listing', listing_id=listing_id)
 
+
+def toggle_watchlist(request, listing_id):
+    user = request.user
+    if not user.is_authenticated:
+        # If the user is not authenticated, redirect them to login
+        return redirect("login")
+    listing = Listing.objects.get(pk=listing_id)
+    # Check if the user already has a Watchlist instance
+    watchlist, created = Watchlist.objects.get_or_create(user=user)
+    # If the listing is already in the user's watchlist, remove it
+    if listing in watchlist.listings.all():
+        watchlist.listings.remove(listing)
+    # Otherwise, add it
+    else:
+        watchlist.listings.add(listing)
+
+    return redirect('listing', listing_id=listing_id)
+
+
+@login_required()
+def watchlist(request, user_id):
+    user = User.objects.get(id=user_id)
+    watchlist, created = Watchlist.objects.get_or_create(user=user)
+    return render(request, "auctions/watchlist.html", {
+        "listings": watchlist.listings.all()
+    })
+
+
+
+def close_auction(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    # Ensure that the user trying to close the auction is the creator of the listing
+    if request.user == listing.creator and listing.active:
+        highest_bid = Bid.objects.filter(listing=listing).order_by('-price').first()
+        if highest_bid:
+            listing.winner = highest_bid.bidder
+            listing.sold = True
+            listing.active = False
+            listing.save()
+
+    return redirect('listing', listing_id=listing_id)
 
 def login_view(request):
     if request.method == "POST":
