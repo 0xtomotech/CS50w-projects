@@ -1,6 +1,6 @@
 # Project Commerce: Auctions Web Application
 
-- [App Demo on Youtube](UPDATE)
+- [App Demo on Youtube](https://youtu.be/vmBd0o46UgM)
 - [Project Instructions](https://cs50.harvard.edu/web/2020/projects/2/commerce/)
 
 ## Table of Contents
