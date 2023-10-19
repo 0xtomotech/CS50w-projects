@@ -25,11 +25,32 @@
 
                     <hr>
 
+                    {% if user.is_authenticated and user == listing.creator and listing.active %}
+                    <a href="{% url 'close_auction' listing.id %}" class="btn btn-success">Close Auction </a>
+                    <hr>
+                    {% endif %}
+
+                    {% if user.is_authenticated and user == listing.creator and listing.active == False %}
+                    <p class="card-text">Auction closed. Sold to {{ listing.winner }}.</p>
+                    <hr>
+                    {% endif %}
+
+                    {% if user.is_authenticated and user == listing.winner and listing.active == False %}
+                    <p class="card-text">Congrats! The item is yours!</p>
+                    <hr>
+                    {% endif %}
+
+                    {% if user.is_authenticated and user != listing.winner and user != listing.creator and listing.active == False %}
+                    <p class="card-text">Listing Inactive - Item sold to {{ listing.winner }}.</p>
+                    <hr>
+                    {% endif %}
+
+
                     <p class="card-text">Category: {{ listing.category }}</p>
                     <p class="card-text font-weight-bold">{{ listing.description }}</p>
                     <p class="card-text font-weight-bold text-primary">Price: ${{ listing.price }}</p>
 
-                    {% if user.is_authenticated and listing.active %}
+                    {% if user.is_authenticated and listing.active and user != listing.creator %}
                     <form action="{% url 'listing_bid' listing.id %}" method="POST">
                         {% csrf_token %}
                         {{ bid_form.as_p }}
@@ -58,7 +79,7 @@
                     <hr>
 
                     {% if user.is_authenticated and listing.active %}
-                    <h4>Comments</h4>
+                    <h4>Add Comment</h4>
                     <form action="{% url 'listing' listing.id %}" method="post">
                         {% csrf_token %}
                         {{ comment_form.as_p }}
@@ -66,6 +87,7 @@
                     </form>
                     {% endif %}
                     {% if comments %}
+                        <h4>All Comments</h4>
                         <ul>
                         {% for comment in comments %}
                             <li>

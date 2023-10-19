@@ -2,9 +2,6 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
-# TODO: create a superuser account: python3 manage.py createsuperuser
-# TODO: admin to view, add, edit, and delete any listings, comments, and bids made on the site.
-
 from .models import User, Category, Listing, Bid, Comment, Watchlist
 
 
@@ -13,7 +10,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ListingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'creator', 'category', 'active', 'sold', 'price')
+    list_display = ('id', 'title', 'creator', 'category', 'active', 'sold', 'price', 'winner')
     list_filter = ('active', 'sold', 'category')
     search_fields = ('title', 'description')
 

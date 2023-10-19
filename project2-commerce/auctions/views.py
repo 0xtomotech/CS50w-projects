@@ -8,9 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .models import User, Listing, Category, Bid, Watchlist, Comment
 from .forms import CreateListingForm, BidForm, CommentForm, CategoryFilterForm
 
-# TODO: listing should also render watched by section
 
-#TODO: default index route to render all active auction listings
 def index(request):
 
     return render(request, "auctions/index.html", {
@@ -38,7 +36,7 @@ def createlisting(request):
             # Check if image_url is provided by user, if not assign a placeholder
             image_url = form.cleaned_data['image_url']
             if not image_url:
-                image_url = 'placeholderimageurl.jpg'
+                image_url = 'https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg'
             # Create a new listing
             listing = Listing(
                 creator=request.user,
@@ -94,9 +92,12 @@ def listing(request, listing_id):
 
 
 
+@login_required
 def bid_on_listing(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     bids = Bid.objects.filter(listing=listing).order_by('-price')
+    comment_form = CommentForm()
+    comments = Comment.objects.filter(listing=listing).order_by('-timestamp')
     if request.method == "POST":
         form = BidForm(request.POST)
         if form.is_valid():
@@ -113,7 +114,9 @@ def bid_on_listing(request, listing_id):
                     "is_owner": (listing.creator == request.user),
                     "bid_form": form,
                     "message": "Bid sucessfully placed!",
-                    "bids": bids
+                    "bids": bids,
+                    "comment_form": comment_form,
+                    "comments": comments
                 })
             else:
                 # render listing page with error message displayed in listing html
@@ -122,7 +125,9 @@ def bid_on_listing(request, listing_id):
                     "is_owner": (listing.creator == request.user),
                     "bid_form": form,
                     "message": "Your bid should be higher than the current price!",
-                    "bids": bids
+                    "bids": bids,
+                    "comment_form": comment_form,
+                    "comments": comments
                 })
         else:
             return render(request, "auctions/listing.html", {
@@ -130,12 +135,15 @@ def bid_on_listing(request, listing_id):
                 "is_owner": (listing.creator == request.user),
                 "bid_form": form,
                 "message": "Invalid form input. Please try again.",
-                "bids": bids
+                "bids": bids,
+                "comment_form": comment_form,
+                "comments": comments
             })
     # Handle GET requests
     return redirect('listing', listing_id=listing_id)
 
 
+@login_required
 def toggle_watchlist(request, listing_id):
     user = request.user
     if not user.is_authenticated:
@@ -154,7 +162,7 @@ def toggle_watchlist(request, listing_id):
     return redirect('listing', listing_id=listing_id)
 
 
-@login_required()
+@login_required
 def watchlist(request, user_id):
     user = User.objects.get(id=user_id)
     watchlist, created = Watchlist.objects.get_or_create(user=user)
@@ -162,7 +170,15 @@ def watchlist(request, user_id):
         "listings": watchlist.listings.all()
     })
 
-# TODO: Check loging required against each view
+
+
+@login_required()
+def won_auctions(request):
+    user = request.user
+    won_listings = Listing.objects.filter(winner=user)
+    return render(request, "auctions/wonauctions.html", {
+        "listings": won_listings
+    })
 
 def category(request):
     form = CategoryFilterForm(request.GET or None)
@@ -180,6 +196,7 @@ def category(request):
     })
 
 
+@login_required()
 def close_auction(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     # Ensure that the user trying to close the auction is the creator of the listing

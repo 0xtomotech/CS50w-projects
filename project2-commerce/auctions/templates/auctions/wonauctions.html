@@ -1,18 +1,10 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h3>All Listings per Category</h3>
+    <h3>Listings I have won</h3>
     <div class="containe-fluidr mt-5">
-        <div class="row">
-            <!-- Filter form -->
-            <div class="col-12 mb-4">
-                <form method="get">
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary">Select</button>
-                </form>
-            </div>
-        </div>
 
+        {% if listings %}
          <div class="row justify-content-start"> <!-- Added justify-content-start for left-aligned cards -->
             {% for listing in listings %}
                 <div class="col-lg-4 mb-4"> <!-- Changed col-md-4 to col-lg-4 for larger cards on large screens -->
@@ -41,5 +33,9 @@
                 </div>
             {% endfor %}
         </div>
+        {% else %}
+        <p>You have not won an auction yet!</p>
+        {% endif %}
+
     </div>
 {% endblock %}
