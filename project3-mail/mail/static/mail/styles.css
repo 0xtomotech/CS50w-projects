@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+textarea {
+    min-height: 400px;
+}
+
+.email-item {
+    font-family: Arial, sans-serif;
+    border: 1px dotted blue;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+.email-top-row, .email-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.email-sender, .email-recipients, .email-subject, .email-timestamp {
+    margin: 5px 0;
+}
+
+.email-sender {
+    text-align: left;
+    flex-grow: 1;
+}
+
+.email-recipients {
+    text-align: right;
+    flex-grow: 2;
+}
+
+.email-subject {
+    text-align: left;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+.email-timestamp {
+    text-align: right;
+    flex-grow: 2;
+    font-style: italic;
+}
