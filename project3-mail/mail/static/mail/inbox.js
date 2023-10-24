@@ -289,10 +289,19 @@ function render_single_email(email) {
     const buttonRow = document.createElement('div');
     buttonRow.className = 'email-button-row';
 
+    // create and add reply button
+    const replyButton = document.createElement('button');
+    replyButton.className = "btn btn-sm btn-outline-primary";
+    replyButton.innerText = "Reply";
+    replyButton.addEventListener('click', () => {
+       reply_email(email);
+    });
+    buttonRow.appendChild(replyButton);
+
     // if email is not sent by user, render archive/unarchive buttons
     if (email.sender !== loggedInUser) {
         const archiveButton = document.createElement('button');
-        archiveButton.className = 'btn btn-sm btn-outline-primary';
+        archiveButton.className = 'btn btn-sm btn-outline-warning';
 
         if (!email.archived) {
             archiveButton.innerText = 'Archive';
@@ -313,6 +322,17 @@ function render_single_email(email) {
 
 
     singleEmail.appendChild(emailElement);
+
+}
+
+function reply_email(email) {
+    compose_email()
+
+    document.querySelector('#compose-recipients').value = email.sender;
+    const subjectPrefix = email.subject.startsWith('Re: ') ? '' : 'Re: ';
+    document.querySelector('#compose-subject').value = subjectPrefix + email.subject;
+    const bodyPrefix = `\n\nOn ${email.timestamp} ${email.sender} wrote:\n`;
+    document.querySelector('#compose-body').value = bodyPrefix + email.body;
 
 }
 

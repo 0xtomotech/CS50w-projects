@@ -9,10 +9,19 @@ textarea {
     margin-bottom: 5px;
 }
 
-.email-top-row, .email-bottom-row, .email-body, .email-button-row {
+.email-top-row, .email-bottom-row, .email-body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.email-button-row {
+    display: flex;
+    justify-content: start;
+}
+
+.email-button-row button {
+        margin-right: 10px;
 }
 
 .email-sender, .email-recipients, .email-subject, .email-timestamp {
