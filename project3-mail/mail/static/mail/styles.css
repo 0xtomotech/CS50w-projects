@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-
 textarea {
     min-height: 400px;
 }
@@ -11,7 +9,7 @@ textarea {
     margin-bottom: 5px;
 }
 
-.email-top-row, .email-bottom-row {
+.email-top-row, .email-bottom-row, .email-body, .email-button-row {
     display: flex;
     justify-content: space-between;
     align-items: center;

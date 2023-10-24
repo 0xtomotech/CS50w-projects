@@ -1,4 +1,9 @@
+let loggedInUser;
+
 document.addEventListener('DOMContentLoaded', function() {
+
+    // set logged in User for later use
+    loggedInUser = document.querySelector('h2').dataset.userEmail;
 
   // Use buttons to toggle between views
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
@@ -16,11 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
   load_mailbox('inbox');
 });
 
+
+
 function compose_email() {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
+  document.querySelector('#single-email-view').style.display = 'none';
 
   // Clear out composition fields
   document.querySelector('#compose-recipients').value = '';
@@ -76,6 +84,7 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#single-email-view').style.display = 'none';
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
@@ -120,6 +129,8 @@ function render_emails(emails) {
           // Create a div for each email
           const emailElement = document.createElement('div');
           emailElement.className = 'email-item';
+          // store email id as data attribute
+          emailElement.dataset.id = email.id;
 
           // create top row
           const topRow = document.createElement('div');
@@ -163,6 +174,162 @@ function render_emails(emails) {
           // Append email to email list
           emailList.appendChild(emailElement);
 
+          // Add event listener for clicking the email
+          emailElement.addEventListener('click', function() {
+              console.log('An email element has been clicked!')
+              load_email(emailElement.dataset.id);
+          });
 
         });
+}
+
+function load_email(email_id) {
+
+    document.querySelector('#emails-view').style.display = 'none';
+    document.querySelector('#compose-view').style.display = 'none';
+    document.querySelector('#single-email-view').style.display = 'block';
+
+    // Fetch email
+    fetch(`/emails/${email_id}`)
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Failed to load email');
+                });
+            }
+            return response.json();
+        })
+        .then(email => {
+            // call render_single_email function
+            render_single_email(email);
+            console.log(email);
+
+            // If email is unread, mark it as read
+            if (!email.read) {
+                fetch(`/emails/${email_id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        read: true
+                    })
+                }).then(response => {
+                    if (!response.ok) {
+                        console.error("Failed to mark email as read");
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('There was an error loading the email:', error.message);
+            alert('Error loading email: ' + error.message);
+        })
+}
+
+function render_single_email(email) {
+    const singleEmail = document.querySelector('#single-email-view');
+    // clear content
+    singleEmail.innerHTML = '';
+    // add header
+    const headerElement = document.createElement('h3');
+    singleEmail.appendChild(headerElement);
+
+    // Create a div for email headline
+    const emailElement = document.createElement('div');
+    emailElement.className = 'email-item';
+    // store email id as data attribute
+    emailElement.dataset.id = email.id;
+
+    // create top row
+    const topRow = document.createElement('div');
+    topRow.className = 'email-top-row';
+
+    const senderElement = document.createElement('p');
+    senderElement.className = 'email-sender';
+    senderElement.innerText = `from: ${email.sender}`;
+    topRow.appendChild(senderElement);
+
+    const recipientsElement = document.createElement('p');
+    recipientsElement.className = 'email-recipients';
+    recipientsElement.innerText = `to: ${email.recipients.join(', ')}`;
+    topRow.appendChild(recipientsElement);
+
+    emailElement.appendChild(topRow);
+
+    // create bottom row
+    const bottomRow = document.createElement('div');
+    bottomRow.className = 'email-bottom-row';
+
+    const subjectElement = document.createElement('p');
+    subjectElement.className = 'email-subject';
+    subjectElement.innerText = `subject: ${email.subject}`;
+    bottomRow.appendChild(subjectElement);
+
+    const timestampElement = document.createElement('p');
+    timestampElement.className = 'email-timestamp';
+    timestampElement.innerText = email.timestamp;
+    bottomRow.appendChild(timestampElement);
+
+    emailElement.appendChild(bottomRow);
+
+    // create email body
+    const emailBody = document.createElement('div');
+    emailBody.className = 'email-body';
+
+    const emailText = document.createElement('div');
+    emailText.className = 'email-text';
+    emailText.innerHTML = email.body.replace(/\n/g, '<br>');
+
+    emailBody.appendChild(emailText);
+
+    emailElement.appendChild(emailBody);
+
+    const hrElement = document.createElement('hr');
+    emailElement.appendChild(hrElement);
+
+    // TODO: conditionally create a button row, in which there could be an Archive or Unarchive or nothing
+    // Create button row
+    const buttonRow = document.createElement('div');
+    buttonRow.className = 'email-button-row';
+
+    // if email is not sent by user, render archive/unarchive buttons
+    if (email.sender !== loggedInUser) {
+        const archiveButton = document.createElement('button');
+        archiveButton.className = 'btn btn-sm btn-outline-primary';
+
+        if (!email.archived) {
+            archiveButton.innerText = 'Archive';
+            archiveButton.addEventListener('click', () => {
+                toggle_archive(email.id, true); // Archive the email
+            });
+        } else {
+            archiveButton.innerText = 'Unarchive';
+            archiveButton.addEventListener('click', () => {
+                toggle_archive(email.id, false); // Unarchive the email
+            });
+        }
+
+        buttonRow.appendChild(archiveButton);
+    }
+
+    emailElement.appendChild(buttonRow);
+
+
+    singleEmail.appendChild(emailElement);
+
+}
+
+function toggle_archive(email_id, archived) {
+    fetch(`/emails/${email_id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            archived: archived
+        })
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to archive/unarchive email');
+        }
+        load_mailbox('inbox');
+    }).catch(error => {
+        console.error('There was an error toggling the archive status:', error.message);
+        alert('Error toggling archive status: ' + error.message);
+    });
 }
