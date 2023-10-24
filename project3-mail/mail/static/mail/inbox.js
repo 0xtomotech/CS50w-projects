@@ -285,7 +285,6 @@ function render_single_email(email) {
     const hrElement = document.createElement('hr');
     emailElement.appendChild(hrElement);
 
-    // TODO: conditionally create a button row, in which there could be an Archive or Unarchive or nothing
     // Create button row
     const buttonRow = document.createElement('div');
     buttonRow.className = 'email-button-row';
