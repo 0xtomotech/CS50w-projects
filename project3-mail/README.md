@@ -4,7 +4,7 @@
 - [Project Instructions](https://cs50.harvard.edu/web/2020/projects/3/mail/)
 
 
-A simple web-based email client with functionalities like composing emails, viewing inbox, sent, and archived emails.
+Mail is a simple web-based email client with functionalities like composing emails, viewing inbox, sent, and archived emails.
 
 ## Features:
 
