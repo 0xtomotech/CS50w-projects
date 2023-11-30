@@ -15,6 +15,18 @@ def index(request):
     })
 
 
+def following_view(request):
+    current_user = request.user
+    # fetch users that current user is following
+    users_on_feed = User.objects.filter(followers__follower=current_user)
+    # fetch posts from these users
+    posts = Post.objects.filter(user__in=users_on_feed).order_by('-timestamp')
+
+    return render(request, "network/following.html", {
+        "posts": posts
+    })
+
+
 def user_view(request, user_name):
     user_profile = User.objects.get(username=user_name)
     posts = Post.objects.filter(user=user_profile).order_by('-timestamp')
@@ -34,6 +46,7 @@ def user_view(request, user_name):
     }
 
     return render(request, "network/user.html", context)
+
 
 @login_required
 def toggle_follow(request, user_name):
@@ -55,6 +68,13 @@ def toggle_follow(request, user_name):
 
     return HttpResponseRedirect(reverse('user_page', args=[user_name]))
 
+
+@login_required
+def post_edit(request, post_id):
+    if request.method == "POST":
+        try:
+            post = Post.objects.get(id=post_id, user=request.user)
+            content = request.POST.get()
 
 def login_view(request):
     if request.method == "POST":

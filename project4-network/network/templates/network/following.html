@@ -4,7 +4,7 @@
     <div class="container mt-4">
 
         <div class="container m-1">
-            <h3>all posts</h3>
+            <h3>your feed</h3>
         </div>
 
     {% for post in posts %}
@@ -23,8 +23,9 @@
         </div>
     {% empty %}
         <div class="container m-1">
-            <p>no posts on the platform.</p>
+            <p>you're not following anyone :(</p>
         </div>
+
     {% endfor %}
     </div>
 {% endblock %}
