@@ -1,14 +1,59 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post, Follow
 
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Post.objects.all()
+    return render(request, "network/index.html", {
+        "posts": posts
+    })
+
+
+def user_view(request, user_name):
+    user_profile = User.objects.get(username=user_name)
+    posts = Post.objects.filter(user=user_profile).order_by('-timestamp')
+    current_user = request.user
+
+    # Check if current user follows the profile
+    is_following = False
+    if current_user.is_authenticated and Follow.objects.filter(user=user_profile, follower=current_user).exists():
+        is_following = True
+
+    context = {
+        'user_profile': user_profile,
+        'posts': posts,
+        'is_following': is_following,
+        'followers_count': user_profile.count_followers(),
+        'following_count': user_profile.count_following()
+    }
+
+    return render(request, "network/user.html", context)
+
+@login_required
+def toggle_follow(request, user_name):
+    if request.method == "POST":
+        current_user = request.user
+        try:
+            user_to_follow = User.objects.get(username=user_name)
+        except User.DoesNotExist:
+            return HttpResponseRedirect(reverse('index'))
+
+        # Check if current user already follows the account
+        existing_follow = Follow.objects.filter(user=user_to_follow, follower=current_user).first()
+        if existing_follow:
+            # Unfollow user
+            existing_follow.delete()
+        else:
+            # Follow user
+            Follow(user=user_to_follow, follower=current_user).save()
+
+    return HttpResponseRedirect(reverse('user_page', args=[user_name]))
 
 
 def login_view(request):

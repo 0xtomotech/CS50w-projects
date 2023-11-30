@@ -1,0 +1,43 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+<div class="container mt-4">
+    <div class="profile-header">
+        <h2>{{ user_profile.username }}</h2>
+        <p>Followers: {{ followers_count }} | Following: {{ following_count }}</p>
+        {% if user.is_authenticated and user != user_profile %}
+            <form action="{% url 'toggle_follow' user_profile.username %}" method="post">
+                {% csrf_token %}
+                {% if is_following %}
+                <button type="submit" class="btn btn-primary">Unfollow</button>
+                {% else %}
+                <button type="submit" class="btn btn-primary">Follow</button>
+                {% endif %}
+
+            </form>
+        {% endif %}
+    </div>
+
+    <div class="posts">
+        {% for post in posts %}
+            <div class="card mb-3">
+            <div class="card-header">
+                {{ post.user.username }} on {{ post.timestamp|date:"M d, Y H:i" }}
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ post.content }}</p>
+            </div>
+            <div class="card-footer text-muted">
+                <span class="mr-2">{{ post.count_likes }} Likes</span>
+                <!-- Placeholder for Like Button -->
+                <!-- Placeholder for Comment Button -->
+            </div>
+            </div>
+        {% empty %}
+            <p>No posts available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
