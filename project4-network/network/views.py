@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -73,8 +73,19 @@ def toggle_follow(request, user_name):
 def post_edit(request, post_id):
     if request.method == "POST":
         try:
-            post = Post.objects.get(id=post_id, user=request.user)
-            content = request.POST.get()
+            post = Post.objects.get(id=post_id, user=request.user)  # Ensuring only the author can edit the post
+            content = request.POST.get('content')
+            if content:
+                post.content = content
+                post.save()
+                return JsonResponse({"message": "post updated successfully."}, status=200)
+            else:
+                return JsonResponse({"error": "content cannot be empty."}, status=400)
+        except Post.DoesNotExist:
+            return JsonResponse({"error": "post not found."}, status=404)
+    else:
+        return JsonResponse({"error": "POST request required."}, status=400)
+
 
 def login_view(request):
     if request.method == "POST":
