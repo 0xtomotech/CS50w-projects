@@ -80,11 +80,11 @@ def post_edit(request, post_id):
                 post.save()
                 return JsonResponse({"message": "Post updated successfully."}, status=200)
             else:
-                return JsonResponse({"error": "Content cannot be empty."}, status=400)
+                return JsonResponse({"error": "Content cannot be empty!"}, status=400)
         except Post.DoesNotExist:
-            return JsonResponse({"error": "Post not found."}, status=404)
+            return JsonResponse({"error": "Post not found..."}, status=404)
     else:
-        return JsonResponse({"error": "POST request required."}, status=400)
+        return JsonResponse({"error": "POST request required!"}, status=400)
 
 
 def login_view(request):
