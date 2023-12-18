@@ -4,9 +4,10 @@
 {% block body %}
     <div class="container mt-4">
 
-        <div class="container m-1">
+        <div class="container">
             <h3>all posts</h3>
         </div>
+        <br>
 
     {% for post in posts %}
         <div class="card mb-3">
@@ -17,11 +18,12 @@
                 {% if user == post.user %}
                     <div id="post-content-{{ post.id }}">
                         <p class="card-text">{{ post.content }}</p>
-                        <button class="btn btn-secondary" onclick="editPost({{ post.id }})">Edit</button>
+                        <button class="btn btn-secondary" onclick="editPost({{ post.id }})">edit</button>
                     </div>
                     <div id="post-edit-{{ post.id }}" style="display: none;">
                         <textarea class="form-control" id="edit-content-{{ post.id }}">{{ post.content }}</textarea>
-                        <button class="btn btn-primary" onclick="savePost({{ post.id }})">Save</button>
+                        <br>
+                        <button class="btn btn-primary" onclick="savePost({{ post.id }})">save</button>
                     </div>
                 {% else %}
                     <p class="card-text">{{ post.content }}</p>
