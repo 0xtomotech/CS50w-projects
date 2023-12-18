@@ -41,8 +41,12 @@ def following_view(request):
 
 def user_view(request, user_name):
     user_profile = User.objects.get(username=user_name)
-    posts = Post.objects.filter(user=user_profile).order_by('-timestamp')
     current_user = request.user
+    post_list = Post.objects.filter(user=user_profile).order_by('-timestamp')
+    paginator = Paginator(post_list, 10)
+
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
 
     # Check if current user follows the profile
     is_following = False
@@ -51,7 +55,7 @@ def user_view(request, user_name):
 
     context = {
         'user_profile': user_profile,
-        'posts': posts,
+        'page_obj': page_obj,
         'is_following': is_following,
         'followers_count': user_profile.count_followers(),
         'following_count': user_profile.count_following()
