@@ -18,6 +18,46 @@ function toggleLike(postId) {
     });
 }
 
+function showNewPostForm() {
+    document.getElementById('new-post-form').style.display = 'block';
+    document.getElementById('new-post-btn').style.display = 'none';
+}
+
+function hideNewPostForm() {
+    document.getElementById('new-post-form').style.display = 'none';
+    document.getElementById('new-post-btn').style.display = 'block';
+}
+
+function submitNewPost() {
+    const content = document.getElementById('new-post-content').value;
+
+    if (!content.trim()) {
+        alert("Please write something for your post.");
+        return;
+    }
+
+    fetch('/new_post', {
+        method: 'POST',
+        body: JSON.stringify({
+            content: content
+        }),
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.message) {
+            hideNewPostForm();
+            document.getElementById('new-post-content').value = ''; // Clear the textarea
+            location.reload(); // Reload the page to show the new post
+        } else {
+            alert(result.error);
+        }
+    });
+}
+
 function editPost(postId) {
         document.getElementById('post-content-' + postId).style.display = 'none';
         document.getElementById('post-edit-' + postId).style.display = 'block';

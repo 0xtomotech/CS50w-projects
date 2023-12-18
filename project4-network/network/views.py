@@ -28,10 +28,14 @@ def following_view(request):
     # fetch users that current user is following
     users_on_feed = User.objects.filter(followers__follower=current_user)
     # fetch posts from these users
-    posts = Post.objects.filter(user__in=users_on_feed).order_by('-timestamp')
+    post_list = Post.objects.filter(user__in=users_on_feed).order_by('-timestamp')
+    paginator = Paginator(post_list, 10)
+
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
 
     return render(request, "network/following.html", {
-        "posts": posts
+        "page_obj": page_obj
     })
 
 
@@ -54,6 +58,20 @@ def user_view(request, user_name):
     }
 
     return render(request, "network/user.html", context)
+
+
+@login_required
+def new_post(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        content = data.get('content')
+
+        if content:
+            Post.objects.create(user=request.user, content=content)
+            return JsonResponse({"message": "Post created successfully."}, status=201)
+        else:
+            return JsonResponse({"error": "Content cannot be empty!"}, status=400)
+    return JsonResponse({"error": "POST request required."}, status=400)
 
 
 @login_required
