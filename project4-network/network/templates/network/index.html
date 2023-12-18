@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
     <div class="container mt-4">
@@ -13,12 +14,23 @@
                 <a href="{% url 'user_page' post.user.username %}">{{ post.user.username }}</a> on {{ post.timestamp|date:"M d, Y H:i" }}
             </div>
             <div class="card-body">
-                <p class="card-text">{{ post.content }}</p>
+                {% if user == post.user %}
+                    <div id="post-content-{{ post.id }}">
+                        <p class="card-text">{{ post.content }}</p>
+                        <button class="btn btn-secondary" onclick="editPost({{ post.id }})">Edit</button>
+                    </div>
+                    <div id="post-edit-{{ post.id }}" style="display: none;">
+                        <textarea class="form-control" id="edit-content-{{ post.id }}">{{ post.content }}</textarea>
+                        <button class="btn btn-primary" onclick="savePost({{ post.id }})">Save</button>
+                    </div>
+                {% else %}
+                    <p class="card-text">{{ post.content }}</p>
+                {% endif %}
             </div>
             <div class="card-footer text-muted">
                 <span class="mr-2">{{ post.count_likes }} likes</span>
                 <!-- Placeholder for Like Button -->
-                <!-- Placeholder for Comment Button -->
+
             </div>
         </div>
     {% empty %}
@@ -27,4 +39,8 @@
         </div>
     {% endfor %}
     </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}

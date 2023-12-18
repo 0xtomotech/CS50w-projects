@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -74,7 +76,8 @@ def post_edit(request, post_id):
     if request.method == "POST":
         try:
             post = Post.objects.get(id=post_id, user=request.user)  # Ensuring only the author can edit the post
-            content = request.POST.get('content')
+            data = json.loads(request.body)  # Load data from json
+            content = data.get('content')
             if content:
                 post.content = content
                 post.save()
