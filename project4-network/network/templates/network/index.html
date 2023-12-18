@@ -30,9 +30,14 @@
                 {% endif %}
             </div>
             <div class="card-footer text-muted">
-                <span class="mr-2">{{ post.count_likes }} likes</span>
-                <!-- Placeholder for Like Button -->
-
+                <span id="like-count-{{ post.id }}" class="mr-2">{{ post.count_likes }} likes</span>
+                <button class="btn btn-outline-primary" onclick="toggleLike({{ post.id }})">
+                    {% if user in post.likes.all %}
+                        Unlike
+                    {% else %}
+                        Like
+                    {% endif %}
+                </button>
             </div>
         </div>
     {% empty %}

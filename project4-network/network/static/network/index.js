@@ -1,3 +1,23 @@
+function toggleLike(postId) {
+    fetch('/post/' + postId + '/like', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const likeCount = document.getElementById('like-count-' + postId);
+        likeCount.textContent = data.likes_count + ' likes';
+        // Update button text based on like/unlike status
+        const likeButton = likeCount.nextElementSibling;
+        likeButton.textContent = data.liked ? 'Unlike' : 'Like';
+        // Remove focus from the button
+        likeButton.blur();
+    });
+}
+
 function editPost(postId) {
         document.getElementById('post-content-' + postId).style.display = 'none';
         document.getElementById('post-edit-' + postId).style.display = 'block';

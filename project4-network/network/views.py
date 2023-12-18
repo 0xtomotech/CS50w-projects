@@ -72,6 +72,26 @@ def toggle_follow(request, user_name):
 
 
 @login_required
+def toggle_like(request, post_id):
+    if request.method == "POST":
+        try:
+            post = Post.objects.get(id=post_id)
+            if request.user in post.likes.all():
+                post.likes.remove(request.user)
+                liked = False
+            else:
+                post.likes.add(request.user)
+                liked = True
+            return JsonResponse({
+                "liked": liked,
+                "likes_count": post.likes.count()
+            }, status=200)
+        except Post.DoesNotExist:
+            return JsonResponse({"error": "Post not found."}, status=404)
+    return JsonResponse({"error": "POST request required."}, status=400)
+
+
+@login_required
 def post_edit(request, post_id):
     if request.method == "POST":
         try:
