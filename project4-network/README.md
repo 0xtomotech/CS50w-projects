@@ -27,7 +27,7 @@ To run this application:
 
 1. Clone the repository:
     ```
-    git clone <your-repo-url>
+    git clone <repo-url>
     ```
 
 2. Navigate to the project directory:
