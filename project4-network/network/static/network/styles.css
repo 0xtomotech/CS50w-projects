@@ -1,0 +1,125 @@
+body {
+    font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #232323;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar .navbar-brand, .navbar-nav .nav-link {
+    color: #e83e8c;
+}
+
+.navbar .navbar-brand, .navbar-nav .nav-link {
+    color: #e83e8c;
+}
+
+.navbar .navbar-nav .nav-link:hover {
+    background-color: #e83e8c;
+    color: white;
+}
+
+.container {
+    padding-top: 20px;
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-header, .card-footer {
+    background-color: #eee;
+}
+
+.card-text {
+    font-size: 0.9em;
+}
+
+.btn {
+    border-radius: 0;
+}
+
+.btn-primary {}
+
+.btn-outline-primary {
+    color: #e83e8c;
+    border-color: #e83e8c;
+}
+
+.btn-outline-primary:hover {
+    background-color: #e83e8c;
+    color: white;
+    border-color: #e83e8c;
+}
+
+.like-count {
+    font-weight: normal; /* Default state */
+    color: #232323; /* Default color */
+}
+
+.like-count-active {
+    font-weight: bold; /* Bold when there are likes */
+    color: #e83e8c; /* Pink when there are likes */
+}
+
+/* Grid layout for posts */
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+}
+
+/* Pagination styles */
+.pagination {
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.pagination .page-link {
+    color: #e83e8c;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #e83e8c;
+    border-color: #e83e8c;
+    color: white;
+}
+
+.card-header a, .card-header a:hover {
+    color: #e83e8c; /* Pink color */
+    text-decoration: none; /* Optional: removes underline */
+    font-size: inherit;
+}
+
+#new-post-btn {
+    background-color: #e83e8c; /* Pink background */
+    border-color: #e83e8c; /* Pink border */
+    color: white; /* White text */
+}
+
+#new-post-btn:hover {
+    background-color: #d13076; /* Slightly darker pink for hover state */
+    border-color: #d13076;
+}
+
+.app-btn {
+    background-color: #eaeaea; /* Pink background */
+    border-color: #eaeaea; /* Pink border */
+    color: #e83e8c; /* White text */
+}
+
+.app-btn:hover {
+    background-color: #d13076; /* Pink background */
+    border-color: #d13076; /* Pink border */
+    color: white; /* White text */
+}
+
+.card-text-size {
+    font-size: 16px; /* or your desired font size */
+}

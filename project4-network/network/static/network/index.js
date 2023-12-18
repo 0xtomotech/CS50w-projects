@@ -10,6 +10,14 @@ function toggleLike(postId) {
     .then(data => {
         const likeCount = document.getElementById('like-count-' + postId);
         likeCount.textContent = data.likes_count + ' likes';
+
+        // Conditional styling for likes
+        if (data.likes_count > 0) {
+            likeCount.classList.add('like-count-active');
+        } else {
+            likeCount.classList.remove('like-count-active');
+        }
+
         // Update button text based on like/unlike status
         const likeButton = likeCount.nextElementSibling;
         likeButton.textContent = data.liked ? 'Unlike' : 'Like';

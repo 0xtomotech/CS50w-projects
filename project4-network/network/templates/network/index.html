@@ -12,32 +12,36 @@
         <div id="new-post-form" style="display: none;">
             <textarea class="form-control" id="new-post-content"></textarea>
             <br>
-            <button class="btn btn-primary" onclick="submitNewPost()">Post</button>
+            <button class="btn btn-outline-primary" onclick="submitNewPost()">Post</button>
         </div>
         <br>
 
+    <div class="post-grid">
     {% for post in page_obj %}
         <div class="card mb-3">
-            <div class="card-header">
+            <div class="card-header card-text-size">
                 <a href="{% url 'user_page' post.user.username %}">{{ post.user.username }}</a> on {{ post.timestamp|date:"M d, Y H:i" }}
             </div>
-            <div class="card-body">
+
+            <div class="card-body card-text-size">
                 {% if user == post.user %}
                     <div id="post-content-{{ post.id }}">
                         <p class="card-text">{{ post.content }}</p>
-                        <button class="btn btn-secondary" onclick="editPost({{ post.id }})">Edit</button>
+                        <button class="btn btn-secondary app-btn" onclick="editPost({{ post.id }})">Edit</button>
                     </div>
                     <div id="post-edit-{{ post.id }}" style="display: none;">
                         <textarea class="form-control" id="edit-content-{{ post.id }}">{{ post.content }}</textarea>
                         <br>
-                        <button class="btn btn-primary" onclick="savePost({{ post.id }})">save</button>
+                        <button class="btn btn-primary app-btn" onclick="savePost({{ post.id }})">Save</button>
                     </div>
                 {% else %}
                     <p class="card-text">{{ post.content }}</p>
                 {% endif %}
             </div>
-            <div class="card-footer text-muted">
-                <span id="like-count-{{ post.id }}" class="mr-2">{{ post.count_likes }} likes</span>
+
+            <div class="card-footer text-muted card-text-size">
+                <span id="like-count-{{ post.id }}" class="mr-2 {% if post.likes.count > 0 %}like-count-active{% endif %}">{{ post.count_likes }} likes</span>
+
                 <button class="btn btn-outline-primary" onclick="toggleLike({{ post.id }})">
                     {% if user in post.likes.all %}
                         Unlike
@@ -52,6 +56,7 @@
             <p>no posts on the platform.</p>
         </div>
     {% endfor %}
+        </div>
 
     <!-- Pagination controls -->
     <nav aria-label="Page navigation">
