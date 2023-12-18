@@ -11,9 +11,9 @@
             <form action="{% url 'toggle_follow' user_profile.username %}" method="post">
                 {% csrf_token %}
                 {% if is_following %}
-                <button type="submit" class="btn btn-primary">unfollow</button>
+                <button type="submit" class="btn btn-outline-primary">unfollow</button>
                 {% else %}
-                <button type="submit" class="btn btn-primary">follow</button>
+                <button type="submit" class="btn btn-outline-primary">follow</button>
                 {% endif %}
 
             </form>

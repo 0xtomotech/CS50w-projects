@@ -1,5 +1,8 @@
 # <span style="color:purple">Social Network Web Application</span>
 
+- [App Demo on Youtube](https://youtu.be/Zl3lXxKCaPc)
+- [Project Instructions](https://cs50.harvard.edu/web/2020/projects/4/network/)
+
 ## <span style="color:purple">Description</span>
 
 The **Social Network Web Application** is a dynamic and feature-rich platform built with Django. It provides users with a space to connect, share, and engage with content. Designed with modern web standards in mind, it combines usability and aesthetic appeal.
@@ -32,10 +35,8 @@ To run this application:
     cd your-project-directory
     ```
 
-3. Install dependencies:
-    ```
-    pip install -r requirements.txt
-    ```
+3. Install dependencies
+
 
 4. Run the Django server:
     ```
